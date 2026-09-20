@@ -1,0 +1,187 @@
+/* Tokens do tema — os três estados que o navegador pode estar:
+   claro por padrão, escuro pelo sistema, e escuro forçado por atributo. */
+:root {
+  color-scheme: light;
+
+  --plano: #eef0f3;
+  --superficie: #fbfcfd;
+  --superficie-2: #e4e8ed;
+  --superficie-3: #f2f4f7;
+  --tinta: #10151b;
+  --tinta-2: #4a545f;
+  // #79848f dava 3,7:1 sobre a superfície clara — abaixo do mínimo de 4,5:1,
+  // logo no texto de 11 px dos eixos e das notas
+  --tinta-3: #5f6a75;
+  --linha: #dde2e8;
+  --borda: rgba(16, 21, 27, 0.12);
+
+  /* três primeiras vagas da paleta validada para daltonismo */
+  --serie-1: #2a78d6;
+  --serie-2: #eb6834;
+  --serie-3: #1baf7a;
+  --neutro-div: #eceff2;
+
+  --sombra: 0 1px 2px rgba(16, 21, 27, 0.05), 0 12px 28px -18px rgba(16, 21, 27, 0.35);
+  --raio: 14px;
+
+  --fonte-titulo: 'Bricolage Grotesque', 'Public Sans', sans-serif;
+  --fonte-texto: 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --fonte-dados: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+
+    --plano: #0e1114;
+    --superficie: #171b1f;
+    --superficie-2: #242a31;
+    --superficie-3: #1d2228;
+    --tinta: #f3f5f7;
+    --tinta-2: #b5bec7;
+    --tinta-3: #8b949e;
+    --linha: #272d34;
+    --borda: rgba(255, 255, 255, 0.12);
+
+    --serie-1: #3987e5;
+    --serie-2: #d95926;
+    --serie-3: #199e70;
+    --neutro-div: #383835;
+
+    --sombra: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 28px -18px rgba(0, 0, 0, 0.8);
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --plano: #0e1114;
+  --superficie: #171b1f;
+  --superficie-2: #242a31;
+  --superficie-3: #1d2228;
+  --tinta: #f3f5f7;
+  --tinta-2: #b5bec7;
+  --tinta-3: #8b949e;
+  --linha: #272d34;
+  --borda: rgba(255, 255, 255, 0.12);
+
+  --serie-1: #3987e5;
+  --serie-2: #d95926;
+  --serie-3: #199e70;
+  --neutro-div: #383835;
+
+  --sombra: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 28px -18px rgba(0, 0, 0, 0.8);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--plano);
+  color: var(--tinta);
+  font-family: var(--fonte-texto);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--fonte-titulo);
+  margin: 0;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(30px, 5.2vw, 50px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.04;
+}
+
+h2 {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+p {
+  margin: 0;
+}
+
+.rotulo {
+  font-family: var(--fonte-dados);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tinta-3);
+}
+
+.num {
+  font-family: var(--fonte-dados);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Cartão: borda e sombra marcam "objeto separado" — por isso só aqui. */
+.cartao {
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  padding: 18px;
+  box-shadow: var(--sombra);
+
+  > header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 14px;
+
+    p {
+      font-size: 12.5px;
+      color: var(--tinta-2);
+    }
+  }
+}
+
+.botoes {
+  display: inline-flex;
+  border: 1px solid var(--borda);
+  border-radius: 999px;
+  overflow: hidden;
+
+  button {
+    font: inherit;
+    font-size: 12.5px;
+    padding: 5px 14px;
+    border: 0;
+    background: transparent;
+    color: var(--tinta-2);
+    cursor: pointer;
+
+    &[aria-pressed='true'] {
+      background: var(--tinta);
+      color: var(--superficie);
+    }
+  }
+}
+
+:where(button, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--serie-1);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
