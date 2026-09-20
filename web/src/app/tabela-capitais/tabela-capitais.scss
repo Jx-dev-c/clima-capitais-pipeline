@@ -1,0 +1,57 @@
+.rolagem {
+  overflow-x: auto;
+  margin-top: 12px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 13px;
+}
+
+th,
+td {
+  text-align: right;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--linha);
+  white-space: nowrap;
+}
+
+th:first-child,
+td:first-child {
+  text-align: left;
+}
+
+thead th {
+  font-family: var(--fonte-dados);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--tinta-3);
+  font-weight: 500;
+}
+
+tbody td {
+  font-variant-numeric: tabular-nums;
+}
+
+tbody tr:hover {
+  background: var(--superficie-3);
+}
+
+tbody tr.selecionada {
+  background: var(--superficie-3);
+  font-weight: 600;
+}
+
+td button {
+  font: inherit;
+  border: 0;
+  background: none;
+  color: inherit;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: var(--borda);
+  text-underline-offset: 3px;
+}

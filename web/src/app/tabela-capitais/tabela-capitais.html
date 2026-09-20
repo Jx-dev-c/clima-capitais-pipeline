@@ -1,0 +1,34 @@
+<div class="rolagem">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Capital</th>
+        <th scope="col">UF</th>
+        <th scope="col">Região</th>
+        <th scope="col">Média °C</th>
+        <th scope="col">Amplitude °C</th>
+        <th scope="col">Máxima °C</th>
+        <th scope="col">Mínima °C</th>
+        <th scope="col">Umidade %</th>
+        <th scope="col">Chuva mm/ano</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (linha of linhas(); track linha.capital_id) {
+        <tr [class.selecionada]="selecionadas().includes(linha.capital_id)">
+          <td>
+            <button type="button" (click)="alternar(linha.capital_id)">{{ linha.capital }}</button>
+          </td>
+          <td>{{ linha.uf }}</td>
+          <td>{{ linha.regiao }}</td>
+          <td>{{ linha.temp_media_c | number: '1.1-1' }}</td>
+          <td>{{ linha.amplitude_media_c | number: '1.1-1' }}</td>
+          <td>{{ linha.temp_max_absoluta_c | number: '1.1-1' }}</td>
+          <td>{{ linha.temp_min_absoluta_c | number: '1.1-1' }}</td>
+          <td>{{ linha.umidade_media_pct | number: '1.0-0' }}</td>
+          <td>{{ linha.chuva_anual_media_mm | number: '1.0-0' }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
