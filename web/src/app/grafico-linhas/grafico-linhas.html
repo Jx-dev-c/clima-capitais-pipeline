@@ -1,0 +1,43 @@
+<svg [attr.viewBox]="'0 0 ' + L + ' ' + A" role="img" [attr.aria-label]="descricao()">
+  @for (linha of linhasGrade(); track linha.valor) {
+    <line class="grade" [attr.x1]="esqX" [attr.x2]="direitaX" [attr.y1]="linha.y" [attr.y2]="linha.y" />
+    <text class="tick" [attr.x]="esqX - 8" [attr.y]="linha.y + 4" text-anchor="end">{{ linha.rotulo }}</text>
+  }
+
+  <!-- unidade acima da primeira grade: em topoY + 2 colidia com o rotulo do topo -->
+  <text class="tick" [attr.x]="esqX - 8" [attr.y]="topoY - 14" text-anchor="end">{{ unidade() }}</text>
+
+  @for (i of ticksX(); track i) {
+    <text class="tick" [attr.x]="x(i)" [attr.y]="baseY + 20" text-anchor="middle">{{ rotulosX()[i] }}</text>
+  }
+
+  @if (posicaoAtiva() !== null) {
+    <line class="eixo" [attr.x1]="guiaX()" [attr.x2]="guiaX()" [attr.y1]="topoY" [attr.y2]="baseY" />
+  }
+
+  @for (caminho of caminhos(); track caminho.serie.id) {
+    <path class="serie-linha" [attr.d]="caminho.d" [attr.stroke]="caminho.serie.cor" />
+  }
+
+  @for (rotulo of rotulosSerie(); track rotulo.uf) {
+    <circle class="marcador" [attr.cx]="direitaX" [attr.cy]="rotulo.yLinha" r="4" [attr.fill]="rotulo.cor" />
+    <text class="serie-rotulo" [attr.x]="rotulo.x" [attr.y]="rotulo.y" [attr.fill]="rotulo.cor">{{ rotulo.uf }}</text>
+  }
+
+  @for (marca of marcasAtivas(); track $index) {
+    <circle class="marcador" [attr.cx]="marca.x" [attr.cy]="marca.y" r="5" [attr.fill]="marca.cor" />
+  }
+
+  @for (rotulo of rotulosX(); track $index) {
+    <rect
+      [attr.x]="faixaX($index)"
+      [attr.y]="topoY"
+      [attr.width]="larguraFaixa()"
+      [attr.height]="alturaUtil()"
+      fill="transparent"
+      (pointerenter)="aoEntrar($event, $index)"
+      (pointermove)="aoEntrar($event, $index)"
+      (pointerleave)="aoSair()"
+    />
+  }
+</svg>

@@ -1,0 +1,45 @@
+svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.grade {
+  stroke: var(--linha);
+  stroke-width: 1;
+}
+
+.eixo {
+  stroke: var(--borda);
+  stroke-width: 1;
+}
+
+.tick {
+  font-family: var(--fonte-dados);
+  // 15 em unidades do viewBox (560 de largura): num cartão de ~320 px o SVG
+  // encolhe pra ~0,57 e isto ainda renderiza legível; com 11 saía a ~6 px
+  font-size: 15px;
+  fill: var(--tinta-3);
+}
+
+.serie-linha {
+  fill: none;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.serie-rotulo {
+  font-family: var(--fonte-dados);
+  font-size: 11.5px;
+  font-weight: 600;
+  paint-order: stroke;
+  stroke: var(--superficie);
+  stroke-width: 3.5px;
+  stroke-linejoin: round;
+}
+
+.marcador {
+  stroke: var(--superficie);
+  stroke-width: 2;
+}

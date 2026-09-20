@@ -1,0 +1,51 @@
+svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.grade {
+  stroke: var(--linha);
+  stroke-width: 1;
+}
+
+.eixo {
+  stroke: var(--borda);
+  stroke-width: 1;
+}
+
+.tick {
+  font-family: var(--fonte-dados);
+  // 15 em unidades do viewBox (560 de largura): num cartão de ~320 px o SVG
+  // encolhe pra ~0,57 e isto ainda renderiza legível; com 11 saía a ~6 px
+  font-size: 15px;
+  fill: var(--tinta-3);
+}
+
+.legenda {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin: 12px 0 0;
+  padding: 0;
+  font-size: 12.5px;
+  color: var(--tinta-2);
+
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .marca {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+  }
+
+  .uf {
+    font-family: var(--fonte-dados);
+    color: var(--tinta-3);
+  }
+}

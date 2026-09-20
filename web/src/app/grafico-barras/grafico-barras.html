@@ -1,0 +1,46 @@
+<svg
+  [attr.viewBox]="'0 0 ' + L + ' ' + A"
+  role="img"
+  aria-label="Chuva média por mês nas capitais selecionadas"
+>
+  @for (linha of linhasGrade(); track linha.valor) {
+    <line class="grade" [attr.x1]="esqX" [attr.x2]="direitaX" [attr.y1]="linha.y" [attr.y2]="linha.y" />
+    <text class="tick" [attr.x]="esqX - 8" [attr.y]="linha.y + 4" text-anchor="end">{{ linha.rotulo }}</text>
+  }
+
+  <!-- unidade acima da primeira grade: em topoY + 2 colidia com o rotulo do topo -->
+  <text class="tick" [attr.x]="esqX - 8" [attr.y]="topoY - 14" text-anchor="end">{{ unidade() }}</text>
+
+  @for (grupo of grupos(); track grupo.mes) {
+    @for (barra of grupo.barras; track $index) {
+      <rect
+        [attr.x]="barra.x"
+        [attr.y]="barra.y"
+        [attr.width]="barra.largura"
+        [attr.height]="barra.altura"
+        [attr.rx]="barra.raio"
+        [attr.fill]="barra.cor"
+      />
+    }
+    <text class="tick" [attr.x]="grupo.centro" [attr.y]="baseY + 20" text-anchor="middle">{{ grupo.mes }}</text>
+    <rect
+      [attr.x]="faixaX(grupo.m)"
+      [attr.y]="topoY"
+      [attr.width]="larguraFaixa()"
+      [attr.height]="alturaUtil()"
+      fill="transparent"
+      (pointermove)="aoApontar($event, grupo.m)"
+      (pointerleave)="esconder()"
+    />
+  }
+
+  <line class="eixo" [attr.x1]="esqX" [attr.x2]="direitaX" [attr.y1]="baseY" [attr.y2]="baseY" />
+</svg>
+
+<!-- legenda: aqui a identidade da série dependia só da cor, e os chips que
+     explicam a cor ficam em outro cartão, duas seções acima -->
+<ul class="legenda">
+  @for (serie of series(); track serie.id) {
+    <li><span class="marca" [style.background]="serie.cor"></span>{{ serie.nome }} <span class="uf">{{ serie.uf }}</span></li>
+  }
+</ul>
