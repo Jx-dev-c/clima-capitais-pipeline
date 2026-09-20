@@ -1,0 +1,101 @@
+name: CI e deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Permissões mínimas para publicar no GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Uma publicação por vez; não cancela a que já está no ar
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  pipeline:
+    name: Pipeline (pytest + dbt sobre amostra)
+    runs-on: ubuntu-latest
+    env:
+      DATA_DIR: ${{ github.workspace }}/data-ci
+      DUCKDB_PATH: ${{ github.workspace }}/data-ci/clima.duckdb
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Instalar dependências do pipeline
+        run: pip install -r requirements.txt
+
+      - name: pytest
+        run: python -m pytest -q
+
+      # O dado real (15 MB de Parquet) não é versionado, e baixar 162
+      # anos-capital da API a cada push seria abuso de um serviço gratuito.
+      # A amostra sintética tem o mesmo schema, as 27 capitais e um ano
+      # inteiro — o bastante para os testes de qualidade rodarem de verdade.
+      - name: Gerar amostra sintética do raw
+        run: python -m scripts.gerar_amostra --ano 2024
+
+      - name: Carregar no DuckDB
+        run: python -m src.load.load_to_duckdb
+
+      - name: dbt build
+        working-directory: dbt/clima
+        run: |
+          dbt deps
+          dbt build --profiles-dir . --vars '{"anos_esperados": [2024]}'
+
+  app:
+    name: App Angular
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - run: npm ci
+        working-directory: web
+
+      - name: Testes
+        run: npx ng test --watch=false
+        working-directory: web
+
+      # base-href precisa do nome do repositório: no Pages de projeto o site
+      # fica em /<repo>/, não na raiz do domínio
+      - name: Build
+        run: npx ng build --base-href "/${{ github.event.repository.name }}/"
+        working-directory: web
+
+      # O Pages serve arquivo estático: sem isso, abrir /pr,am,ce direto dá 404.
+      # O truque padrão de SPA é devolver o index como página de erro.
+      - name: Fallback de rota
+        run: cp web/dist/web/browser/index.html web/dist/web/browser/404.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/dist/web/browser
+
+  deploy:
+    name: Publicar no GitHub Pages
+    needs: [pipeline, app]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
