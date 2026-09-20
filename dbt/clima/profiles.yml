@@ -1,0 +1,9 @@
+# Sem segredo nenhum: o "warehouse" é um arquivo DuckDB local.
+# Rode o dbt a partir desta pasta (ou com `--profiles-dir .`).
+clima:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('DUCKDB_PATH', '../../data/clima.duckdb') }}"
+      threads: 4

@@ -1,0 +1,37 @@
+name: 'clima'
+version: '1.0.0'
+config-version: 2
+
+profile: 'clima'
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  clima:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table
+
+seeds:
+  clima:
+    capitais:
+      +column_types:
+        capital_id: VARCHAR
+        latitude: DOUBLE
+        longitude: DOUBLE
+        populacao: INTEGER
+
+vars:
+  # Universo esperado de anos — o teste de cobertura cruza isto com o seed de
+  # capitais e cobra cada combinação. O CI roda sobre uma amostra de 1 ano e
+  # sobrescreve com --vars.
+  anos_esperados: [2020, 2021, 2022, 2023, 2024, 2025]

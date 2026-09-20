@@ -1,0 +1,18 @@
+version: 2
+
+sources:
+  - name: raw
+    description: >
+      Dados horários crus da API Open-Meteo, carregados do Parquet pelo
+      `src/load/load_to_duckdb.py` sem nenhuma transformação.
+    schema: raw
+    tables:
+      - name: clima_horario
+        description: >
+          Uma linha por capital e hora local. ~1,4 milhão de linhas
+          (27 capitais × 6 anos × 8.760 horas).
+        columns:
+          - name: capital_id
+            data_tests: [not_null]
+          - name: hora_local
+            data_tests: [not_null]

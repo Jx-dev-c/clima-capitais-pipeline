@@ -1,0 +1,43 @@
+version: 2
+
+models:
+  - name: stg_clima_horario
+    description: Medições horárias com as partes de data já extraídas e métricas em DECIMAL.
+    data_tests:
+      # a partição do caminho (`ano=2024`) tem que bater com o timestamp de
+      # dentro do arquivo — era o que o comentário do load prometia conferir
+      # e ninguém conferia
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "ano_particao = year(hora_local)"
+    columns:
+      - name: capital_id
+        data_tests: [not_null]
+      - name: hora_local
+        data_tests: [not_null]
+      - name: temperatura_c
+        description: Nulo é aceito (hora sem leitura), mas a faixa vale para o que existe.
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: -15
+                max_value: 50
+      - name: umidade_pct
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+      - name: precipitacao_mm
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 200
+      - name: hora_do_dia
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 23
