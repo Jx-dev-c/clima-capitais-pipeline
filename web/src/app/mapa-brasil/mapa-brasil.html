@@ -1,0 +1,53 @@
+@if (mapa(); as mapa) {
+  <svg
+    [attr.viewBox]="'0 0 ' + mapa.largura + ' ' + mapa.altura"
+    role="group"
+    aria-label="Mapa do Brasil com a temperatura média de cada capital"
+  >
+    <g>
+      @for (estado of mapa.estados; track estado.uf) {
+        <path class="uf" [attr.d]="estado.d" />
+      }
+    </g>
+    <g>
+      @for (ponto of pontos(); track ponto.capital.capital_id) {
+        <g
+          class="capital"
+          role="button"
+          tabindex="0"
+          [attr.aria-pressed]="ponto.selecionada"
+          [attr.aria-label]="ponto.capital.capital + ', ' + rotuloDe(ponto.capital)"
+          (click)="alternar(ponto.capital.capital_id)"
+          (keydown)="aoTeclar($event, ponto.capital.capital_id)"
+          (pointermove)="aoApontar($event, ponto.capital)"
+          (pointerleave)="esconder()"
+          (blur)="esconder()"
+        >
+          @if (ponto.selecionada) {
+            <circle
+              class="halo"
+              [attr.cx]="ponto.x"
+              [attr.cy]="ponto.y"
+              r="15"
+              fill="none"
+              [attr.stroke]="ponto.corSelecao"
+              stroke-width="2.5"
+            />
+          }
+          <circle class="ponto" [attr.cx]="ponto.x" [attr.cy]="ponto.y" r="10" [attr.fill]="ponto.cor" />
+        </g>
+      }
+    </g>
+    <g aria-hidden="true">
+      @for (rotulo of rotulos(); track rotulo.nome) {
+        <text [attr.x]="rotulo.x" [attr.y]="rotulo.y" text-anchor="middle">{{ rotulo.nome }}</text>
+      }
+    </g>
+  </svg>
+
+  <div class="escala">
+    <span class="num">{{ rotuloMin() }}</span>
+    <span class="barra" [style.background]="gradiente()"></span>
+    <span class="num">{{ rotuloMax() }}</span>
+  </div>
+}
