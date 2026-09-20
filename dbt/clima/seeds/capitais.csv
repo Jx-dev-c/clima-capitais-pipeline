@@ -1,0 +1,28 @@
+capital_id,capital,uf,estado,regiao,latitude,longitude,populacao,fuso
+ac,Rio Branco,AC,Acre,Norte,-9.9747,-67.81,419452,America/Rio_Branco
+al,Maceió,AL,Alagoas,Nordeste,-9.6658,-35.7353,1031597,America/Maceio
+ap,Macapá,AP,Amapá,Norte,0.0389,-51.0664,512902,America/Belem
+am,Manaus,AM,Amazonas,Norte,-3.1019,-60.025,2219580,America/Manaus
+ba,Salvador,BA,Bahia,Nordeste,-12.9756,-38.491,2711840,America/Bahia
+ce,Fortaleza,CE,Ceará,Nordeste,-3.7172,-38.5431,2400000,America/Fortaleza
+df,Brasília,DF,Distrito Federal,Centro-Oeste,-15.7797,-47.9297,2207718,America/Sao_Paulo
+es,Vitória,ES,Espírito Santo,Sudeste,-20.3194,-40.3378,312656,America/Sao_Paulo
+go,Goiânia,GO,Goiás,Centro-Oeste,-16.6786,-49.2539,1536097,America/Sao_Paulo
+ma,São Luís,MA,Maranhão,Nordeste,-2.5297,-44.3028,917237,America/Fortaleza
+mt,Cuiabá,MT,Mato Grosso,Centro-Oeste,-15.5961,-56.0967,618124,America/Cuiaba
+ms,Campo Grande,MS,Mato Grosso do Sul,Centro-Oeste,-20.4428,-54.6464,906092,America/Campo_Grande
+mg,Belo Horizonte,MG,Minas Gerais,Sudeste,-19.9208,-43.9378,2721564,America/Sao_Paulo
+pa,Belém,PA,Pará,Norte,-1.4558,-48.5044,1499641,America/Belem
+pb,João Pessoa,PB,Paraíba,Nordeste,-7.115,-34.8631,817511,America/Fortaleza
+pr,Curitiba,PR,Paraná,Sul,-25.4278,-49.2731,1948626,America/Sao_Paulo
+pe,Recife,PE,Pernambuco,Nordeste,-8.0539,-34.8811,1653461,America/Recife
+pi,Teresina,PI,Piauí,Nordeste,-5.0892,-42.8019,871126,America/Fortaleza
+rj,Rio de Janeiro,RJ,Rio de Janeiro,Sudeste,-22.9064,-43.1822,6747815,America/Sao_Paulo
+rn,Natal,RN,Rio Grande do Norte,Nordeste,-5.795,-35.2094,896708,America/Fortaleza
+rs,Porto Alegre,RS,Rio Grande do Sul,Sul,-30.0328,-51.2302,1488252,America/Sao_Paulo
+ro,Porto Velho,RO,Rondônia,Norte,-8.7619,-63.9039,548952,America/Porto_Velho
+rr,Boa Vista,RR,Roraima,Norte,2.8197,-60.6733,419652,America/Boa_Vista
+sc,Florianópolis,SC,Santa Catarina,Sul,-27.5967,-48.5492,508826,America/Sao_Paulo
+sp,São Paulo,SP,São Paulo,Sudeste,-23.5475,-46.6361,12400232,America/Sao_Paulo
+se,Aracaju,SE,Sergipe,Nordeste,-10.9111,-37.0717,664908,America/Maceio
+to,Palmas,TO,Tocantins,Norte,-10.1675,-48.3277,306296,America/Araguaina
