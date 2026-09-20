@@ -1,0 +1,16 @@
+# Extração e load
+requests==2.34.2
+pandas==3.0.6
+pyarrow==25.0.1          # escrita do Parquet particionado
+python-dotenv==1.2.3
+tenacity==9.1.4          # retry exponencial na API
+duckdb==1.5.5
+numpy==2.5.3              # amostra sintetica do CI (scripts/gerar_amostra.py)
+
+# Transformação
+dbt-core==1.12.5
+dbt-duckdb==1.11.0
+
+# Testes
+pytest==9.1.1
+pytest-mock==3.15.1

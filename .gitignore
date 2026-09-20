@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Dados (regeneráveis: extração + load + dbt)
+data/
+
+# dbt
+dbt/clima/target/
+dbt/clima/dbt_packages/
+dbt/clima/logs/
+dbt/clima/.user.yml
+
+# Env
+.env
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Angular
+web/node_modules/
+web/dist/
+web/.angular/
