@@ -1,0 +1,43 @@
+<header>
+  <h2>Calendário de {{ principal()?.capital }} ({{ principal()?.uf }})</h2>
+  <div class="botoes" role="group" aria-label="Métrica do calendário">
+    <button type="button" id="cal-temp" [attr.aria-pressed]="metrica() === 'temp'" (click)="trocar('temp')">
+      Temperatura
+    </button>
+    <button type="button" id="cal-chuva" [attr.aria-pressed]="metrica() === 'chuva'" (click)="trocar('chuva')">
+      Chuva
+    </button>
+  </div>
+</header>
+
+<div class="rolagem">
+  <div class="grade">
+    <svg
+      [attr.viewBox]="'0 0 ' + L + ' ' + A()"
+      role="img"
+      [attr.aria-label]="'Calendário diário de ' + principal()?.capital"
+    >
+      @for (rotulo of rotulosMes(); track rotulo.mes) {
+        <text class="cal-rotulo" [attr.x]="rotulo.x" y="14">{{ rotulo.mes }}</text>
+      }
+
+      @for (linha of linhas(); track linha.ano) {
+        <text class="cal-rotulo" x="0" [attr.y]="linha.y + 14">{{ linha.ano }}</text>
+        @for (celula of linha.celulas; track celula.dia) {
+          <rect
+            [attr.x]="celula.x"
+            [attr.y]="linha.y + 2"
+            [attr.width]="larguraCelula - 0.5"
+            [attr.height]="alturaCelula"
+            rx="1"
+            [attr.fill]="celula.cor"
+            (pointerenter)="aoApontar($event, linha.ano, celula)"
+            (pointerleave)="esconder()"
+          />
+        }
+      }
+    </svg>
+  </div>
+</div>
+
+<p class="dica">Cada quadradinho é um dia — {{ principal()?.dias_observados | number: '1.0-0' }} dias por capital.</p>
