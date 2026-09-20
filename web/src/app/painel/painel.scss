@@ -1,0 +1,210 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-block: 28px 64px;
+  padding-inline: 20px;
+}
+
+.topo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 32px;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  .sub {
+    color: var(--tinta-2);
+    max-width: 62ch;
+    margin-top: 10px;
+  }
+}
+
+.fichas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ficha {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 11px;
+  border: 1px solid var(--borda);
+  border-radius: 999px;
+  background: var(--superficie);
+  font-size: 12px;
+  color: var(--tinta-2);
+
+  .num {
+    font-size: 12px;
+    color: var(--tinta);
+  }
+}
+
+.carregando,
+.falha {
+  color: var(--tinta-2);
+  padding: 40px 0;
+}
+
+.falha button {
+  font: inherit;
+  color: var(--serie-1);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.destaques {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.destaque {
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  padding: 16px 18px;
+  box-shadow: var(--sombra);
+
+  .valor {
+    font-family: var(--fonte-titulo);
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    display: block;
+    margin: 6px 0 2px;
+  }
+
+  .nota {
+    font-size: 12.5px;
+    color: var(--tinta-2);
+  }
+}
+
+.painel-duplo {
+  display: grid;
+  grid-template-columns: 1.12fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.selecao {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--borda);
+  background: var(--superficie-3);
+  font: inherit;
+  font-size: 13px;
+  color: var(--tinta);
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--tinta-3);
+  }
+
+  .marca {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+  }
+
+  .sair {
+    color: var(--tinta-3);
+    font-size: 15px;
+    line-height: 1;
+  }
+}
+
+.dica {
+  font-size: 12.5px;
+  color: var(--tinta-3);
+}
+
+.leitura {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 14px;
+  margin-bottom: 16px;
+
+  div {
+    border-top: 1px solid var(--linha);
+    padding-top: 8px;
+  }
+
+  .valor {
+    font-family: var(--fonte-dados);
+    font-variant-numeric: tabular-nums;
+    font-size: 19px;
+    font-weight: 600;
+    display: block;
+  }
+
+  .nota {
+    font-size: 11.5px;
+    color: var(--tinta-3);
+  }
+}
+
+details {
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  padding: 14px 18px;
+  box-shadow: var(--sombra);
+
+  summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+  }
+}
+
+footer {
+  color: var(--tinta-2);
+  font-size: 13px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  border-top: 1px solid var(--borda);
+  padding-top: 18px;
+
+  strong {
+    color: var(--tinta);
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 980px) {
+  .painel-duplo {
+    grid-template-columns: 1fr;
+  }
+
+  .destaques {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .destaque .valor {
+    font-size: 24px;
+  }
+}

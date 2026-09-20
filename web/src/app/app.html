@@ -1,0 +1,17 @@
+<router-outlet />
+
+@if (dica(); as dica) {
+  <!-- sem aria-live: reescrever isto a cada pointermove inundaria o leitor de
+       tela; é informação de hover, e os mesmos números estão na tabela -->
+  <div
+    class="dica-flutuante"
+    role="tooltip"
+    [style.left]="posicao().left"
+    [style.top]="posicao().top"
+  >
+    <div class="titulo">{{ dica.titulo }}</div>
+    @for (linha of dica.linhas; track $index) {
+      <div class="linha">{{ linha.texto }} <b>{{ linha.valor }}</b></div>
+    }
+  </div>
+}

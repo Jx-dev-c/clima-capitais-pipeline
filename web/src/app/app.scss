@@ -1,0 +1,29 @@
+.dica-flutuante {
+  position: fixed;
+  z-index: 30;
+  pointer-events: none;
+  background: var(--superficie);
+  color: var(--tinta);
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  box-shadow: var(--sombra);
+  padding: 9px 12px;
+  font-size: 12.5px;
+  max-width: 250px;
+
+  .titulo {
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+
+  .linha {
+    color: var(--tinta-2);
+    font-variant-numeric: tabular-nums;
+  }
+
+  ::ng-deep b {
+    color: var(--tinta);
+    font-family: var(--fonte-dados);
+    font-weight: 600;
+  }
+}

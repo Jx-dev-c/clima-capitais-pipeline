@@ -1,0 +1,126 @@
+<header class="topo">
+  <div>
+    <p class="rotulo">27 capitais · {{ periodo() }} · dado horário</p>
+    <h1>Termômetro das Capitais</h1>
+    <p class="sub">
+      Seis anos de temperatura, umidade e chuva, hora a hora, em cada capital brasileira — lidos da reanálise ERA5 e
+      agregados num pipeline com DuckDB e dbt. Clique numa capital do mapa para comparar até {{ maxSelecao }}.
+    </p>
+  </div>
+  <div class="fichas">
+    <span class="ficha">Fonte <span class="num">ERA5 / Open-Meteo</span></span>
+    <span class="ficha">Período <span class="num">{{ periodo() }}</span></span>
+    <span class="ficha">Grão <span class="num">1 hora</span></span>
+  </div>
+</header>
+
+<main>
+@if (carregando()) {
+  <p class="carregando" role="status">Carregando seis anos de medições…</p>
+} @else if (erro()) {
+  <p class="falha" role="alert">
+    Não consegui carregar os dados do clima. Verifique a conexão e
+    <button type="button" (click)="recarregar()">tente de novo</button>.
+  </p>
+} @else {
+  <section class="destaques">
+    @for (destaque of destaques(); track destaque.rotulo) {
+      <div class="destaque">
+        <span class="rotulo">{{ destaque.rotulo }}</span>
+        <span class="valor">{{ destaque.valor }}</span>
+        <span class="nota">{{ destaque.nota }}</span>
+      </div>
+    }
+  </section>
+
+  <section class="painel-duplo">
+    <div class="cartao">
+      <header>
+        <h2>Temperatura média do período</h2>
+        <p>Cor = distância da média nacional.</p>
+      </header>
+      <app-mapa-brasil />
+    </div>
+
+    <div class="cartao">
+      <header>
+        <h2>Normais mensais</h2>
+        <p>Temperatura média de cada mês, nos seis anos.</p>
+      </header>
+
+      <div class="selecao">
+        @for (item of selecionadas(); track item.capital.capital_id) {
+          <button
+            type="button"
+            class="chip"
+            [id]="'chip-' + item.capital.capital_id"
+            [attr.aria-label]="'Remover ' + item.capital.capital + ' da comparação'"
+            (click)="remover(item.capital.capital_id)"
+          >
+            <span class="marca" [style.background]="item.cor"></span>
+            {{ item.capital.capital }} <span class="num">{{ item.capital.uf }}</span>
+            <span class="sair" aria-hidden="true">×</span>
+          </button>
+        }
+        @if (selecionadas().length < maxSelecao) {
+          <span class="dica">+ clique no mapa para comparar (até {{ maxSelecao }})</span>
+        }
+      </div>
+
+      <div class="leitura">
+        @for (item of leitura(); track item.rotulo) {
+          <div>
+            <span class="rotulo">{{ item.rotulo }}</span>
+            <span class="valor">{{ item.valor }}</span>
+            <span class="nota">{{ item.nota }}</span>
+          </div>
+        }
+      </div>
+
+      <app-grafico-linhas
+        [series]="seriesMensais()"
+        [rotulosX]="rotulosMes"
+        [ticksX]="ticksMes"
+        descricao="Temperatura média por mês nas capitais selecionadas"
+      />
+    </div>
+  </section>
+
+  <section class="cartao">
+    <app-calendario-anual />
+  </section>
+
+  <section class="painel-duplo">
+    <div class="cartao">
+      <header>
+        <h2>Perfil do dia</h2>
+        <p>Temperatura média por hora local.</p>
+      </header>
+      <app-grafico-linhas
+        [series]="seriesHorarias()"
+        [rotulosX]="rotulosHora"
+        [ticksX]="ticksHora"
+        descricao="Temperatura média por hora do dia nas capitais selecionadas"
+      />
+    </div>
+    <div class="cartao">
+      <header>
+        <h2>Chuva por mês</h2>
+        <p>Acumulado médio do mês, em milímetros.</p>
+      </header>
+      <app-grafico-barras [series]="seriesChuva()" />
+    </div>
+  </section>
+
+  <details>
+    <summary>Ver as {{ totalCapitais() }} capitais em tabela</summary>
+    <app-tabela-capitais />
+  </details>
+}
+</main>
+
+<footer>
+  <span><strong>Fonte:</strong> Open-Meteo Historical Weather API (reanálise ERA5), na hora local de cada capital.</span>
+  <span><strong>Malha:</strong> API de malhas territoriais do IBGE.</span>
+  <span><strong>Pipeline:</strong> Python → Parquet particionado → DuckDB → dbt (6 models, 69 testes).</span>
+</footer>
