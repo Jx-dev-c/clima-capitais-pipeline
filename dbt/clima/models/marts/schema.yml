@@ -1,0 +1,182 @@
+version: 2
+
+models:
+  - name: dim_capital
+    description: Dimensão de capital. Grão = 1 linha por capital (27).
+    columns:
+      - name: capital_id
+        data_tests: [unique, not_null]
+      - name: capital
+        data_tests: [not_null]
+      - name: uf
+        data_tests: [not_null]
+      - name: latitude
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: -34 # Chuí, extremo sul
+                max_value: 6 # Monte Caburaí, extremo norte
+      - name: longitude
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: -74
+                max_value: -34
+
+  - name: fct_clima_diario
+    description: >
+      Clima diário por capital. Grão = 1 linha por capital + dia.
+      Dias incompletos não são descartados aqui: ficam marcados em
+      `dia_completo` (a API pode não ter todas as horas do dia mais recente, e
+      apagar a linha esconderia isso). Quem não pode usá-los — as normais
+      mensais — filtra explicitamente.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - capital_id
+              - dia
+      # amplitude tem que ser exatamente máxima menos mínima: pega min/max
+      # trocados ou agregação feita sobre a coluna errada
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "abs(amplitude_c - (temp_max_c - temp_min_c)) < 0.01"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "temp_media_c between temp_min_c and temp_max_c"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "horas_medidas between 1 and 24"
+    columns:
+      - name: capital_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_capital')
+                field: capital_id
+      - name: dia
+        data_tests: [not_null]
+      - name: temp_media_c
+        description: >
+          Faixa calibrada no comportamento destas 27 séries (observado:
+          3,4 °C a 35,0 °C), não no recorde nacional — o limite largo deixaria
+          passar um erro de offset de vários graus.
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: -5
+                max_value: 40
+      - name: temp_min_c
+        data_tests: [not_null]
+      - name: temp_max_c
+        data_tests: [not_null]
+      - name: amplitude_c
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0 # máxima nunca é menor que mínima
+                max_value: 30
+      - name: umidade_media_pct
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+      - name: chuva_mm
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 500
+      - name: horas_medidas
+        data_tests: [not_null]
+
+  - name: agg_clima_mensal
+    description: Normais mensais por capital, só com dias completos. Grão = capital + mês.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - capital_id
+              - mes
+    columns:
+      - name: capital_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_capital')
+                field: capital_id
+      - name: mes
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1
+                max_value: 12
+      - name: temp_media_c
+        data_tests: [not_null]
+      - name: chuva_media_mm
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 1500
+
+  - name: agg_perfil_horario
+    description: Temperatura média por hora do dia. Grão = capital + hora.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - capital_id
+              - hora_do_dia
+    columns:
+      - name: hora_do_dia
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 23
+      - name: temp_media_c
+        data_tests: [not_null]
+      - name: medicoes
+        data_tests: [not_null]
+
+  - name: agg_capital_resumo
+    description: Uma linha por capital com os números do período inteiro (alimenta o mapa).
+    data_tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "temp_min_absoluta_c < temp_media_c and temp_media_c < temp_max_absoluta_c"
+    columns:
+      - name: capital_id
+        data_tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_capital')
+                field: capital_id
+      - name: temp_media_c
+        data_tests: [not_null]
+      - name: chuva_anual_media_mm
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 100
+                max_value: 5000
+      - name: dias_observados
+        data_tests: [not_null]
+      - name: horas_medidas
+        data_tests: [not_null]
